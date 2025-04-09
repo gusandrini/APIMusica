@@ -21,7 +21,8 @@ public class MusicaService {
     private ArtistaRepository artistaRepo;
 
     public MusicaDTO criar(MusicaDTO dto) {
-        Artista artista = artistaRepo.findById(dto.artistaId).orElseThrow();
+        Artista artista = artistaRepo.findById(dto.artistaId)
+                .orElseThrow(() -> new RuntimeException("Artista não encontrado com ID: " + dto.artistaId));
         Musica musica = MusicaMapper.toEntity(dto, artista);
         return MusicaMapper.toDTO(musicaRepo.save(musica));
     }
