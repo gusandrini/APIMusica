@@ -22,6 +22,9 @@ public class MusicaDTO {
         this.id = id;
     }
 
+    @NotNull
+    public Long albumId;
+
     public String getTitulo() {
         return titulo;
     }

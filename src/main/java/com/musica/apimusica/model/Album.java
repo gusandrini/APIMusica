@@ -3,11 +3,10 @@ package com.musica.apimusica.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-
 import java.util.List;
 
 @Entity
-public class Artista {
+public class Album {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,16 +16,11 @@ public class Artista {
     @Size(max = 255)
     private String nome;
 
-    @Size(max = 255)
-    private String estilo;
+    @ManyToOne
+    @JoinColumn(name = "artista_id", nullable = false)
+    private Artista artista;
 
-    @NotBlank
-    private String email;
-
-    @OneToMany(mappedBy = "artista")
-    private List<Album> albums;
-
-    @OneToMany(mappedBy = "artista")
+    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Musica> musicas;
 
     public Long getId() {
@@ -45,28 +39,12 @@ public class Artista {
         this.nome = nome;
     }
 
-    public String getEstilo() {
-        return estilo;
+    public Artista getArtista() {
+        return artista;
     }
 
-    public void setEstilo(String estilo) {
-        this.estilo = estilo;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public List<Album> getAlbums() {
-        return albums;
-    }
-
-    public void setAlbums(List<Album> albums) {
-        this.albums = albums;
+    public void setArtista(Artista artista) {
+        this.artista = artista;
     }
 
     public List<Musica> getMusicas() {
@@ -75,5 +53,15 @@ public class Artista {
 
     public void setMusicas(List<Musica> musicas) {
         this.musicas = musicas;
+    }
+
+    public void adicionarMusica(Musica musica) {
+        musicas.add(musica);
+        musica.setAlbum(this);
+    }
+
+    public void removerMusica(Musica musica) {
+        musicas.remove(musica);
+        musica.setAlbum(null);
     }
 }
